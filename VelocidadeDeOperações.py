@@ -160,6 +160,7 @@ def endlessMode():
 Tentando melhorar a precisão
 Para 'sair' do modo digite sair ou 'Sair'
     """)
+
     acertos = 0
     resposta = True
 
@@ -167,27 +168,29 @@ Para 'sair' do modo digite sair ou 'Sair'
         random.shuffle(lista)
 
         for num in lista:
+            print(f"Win Streak: {acertos}")
             while resposta:
                 try:
-                    print(f"Win Streak: {acertos}")
                     resposta = input(f"{num} = ")
 
                     if int(resposta) == eval(num):
                         acertos += 1
+                        break
                     else:
-                        acertos = 0
+                        acertos = -1
 
+                except ValueError:
                     if resposta == 'sair' or resposta == "Sair":
                         resposta = False
                         break
-                    elif int(resposta) == eval(num):
-                        break
-                except ValueError:
-                    continue
-
+                    else:
+                        clear()
+                        resposta = True
+                        continue
             clear()
-            if resposta == 'sair' or resposta == "Sair":
-                break
+
+        if resposta == 'sair' or resposta == "Sair":
+            break
 
 
 chave = str(datetime.datetime.now().strftime("%d-%m"))
