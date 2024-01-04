@@ -162,21 +162,26 @@ Tentando melhorar a precisão
 Para 'sair' do modo digite sair ou 'Sair'
     """)
 
-    flag = ''
-    while flag != 'sair' or flag != "Sair":
+    resposta = True
+    while resposta:
         random.shuffle(lista)
 
-        resultado = True
         for num in lista:
-            while True:
+            while resposta:
                 try:
-                    resultado = input(f"{num} = ")
-                    if int(resultado) == eval(num):
+                    resposta = input(f"{num} = ")
+
+                    if resposta == 'sair' or resposta == "Sair":
+                        resposta = False
                         break
+                    elif int(resposta) == eval(num):
+                        break
+
                 except ValueError:
                     continue
-
             clear()
+            if resposta == 'sair' or resposta == "Sair":
+                break
 
 
 chave = str(datetime.datetime.now().strftime("%d-%m"))
@@ -206,7 +211,7 @@ Escolha: """)
     match flag:
         case '1':
             endlessMode()
-            break
+            continue
         case '2':
             break
         case '3':
@@ -223,4 +228,4 @@ Escolha: """)
             continue
         case _:
             normal_game()
-            break
+            continue
