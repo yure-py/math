@@ -103,7 +103,6 @@ def verificar_records():
     clear()
 
 
-# noinspection PyUnboundLocalVariable
 def normal_game():
     print("Iniciando...\n")
     mostra_a_cola()
@@ -161,24 +160,31 @@ def endlessMode():
 Tentando melhorar a precisão
 Para 'sair' do modo digite sair ou 'Sair'
     """)
-
+    acertos = 0
     resposta = True
+
     while resposta:
         random.shuffle(lista)
 
         for num in lista:
             while resposta:
                 try:
+                    print(f"Win Streak: {acertos}")
                     resposta = input(f"{num} = ")
+
+                    if int(resposta) == eval(num):
+                        acertos += 1
+                    else:
+                        acertos = 0
 
                     if resposta == 'sair' or resposta == "Sair":
                         resposta = False
                         break
                     elif int(resposta) == eval(num):
                         break
-
                 except ValueError:
                     continue
+
             clear()
             if resposta == 'sair' or resposta == "Sair":
                 break
