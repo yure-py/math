@@ -4,8 +4,6 @@ import time
 import datetime
 import shelve
 import os
-from _ast import operator
-
 
 def mostra_a_cola():
     """
@@ -63,13 +61,13 @@ Escolha o operador
             lista.append(expression)
 
     ordered_list = lista[:]
+    clear()
 
 def verifica_numero_e_operador():
     if not numero_operado:
         criar_tabela()
 
 # Área shelve
-
 def clear():
     if platform.system() == "Linux":
         os.system("clear")
@@ -152,6 +150,7 @@ def guardar_records(tempo_feito):
 
     d.close()
 
+# game mode
 def normal_game():
     print("iniciando...")
     mostra_a_cola()
@@ -201,11 +200,11 @@ def normal_game():
             clear()
         else:
             print("Com erros sem tempo salvo!")
-
+            input("\nDigite qualquer tecla para continuar!")
 
 def endlessMode():
     print("""
-Tentando melhorar a precisão
+Modo para melhorar a precisão dos cálculos antes de entrar no normal game!
 Para 'sair' do modo digite sair ou 'Sair'
     """)
 
@@ -232,7 +231,6 @@ Para 'sair' do modo digite sair ou 'Sair'
                         resposta = False
                         break
                     else:
-                        clear()
                         resposta = True
                         continue
             clear()
@@ -246,7 +244,7 @@ ordered_list = []
 numero_operado = ''
 operador = ''
 
-
+# main
 while True:
     clear()
     resultado = ''
@@ -265,8 +263,8 @@ Escolha: """)
     clear()
     match flag:
         case '1':
-            endlessMode()
             verifica_numero_e_operador()
+            endlessMode()
             continue
         case '2':
             break
