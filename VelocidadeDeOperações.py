@@ -4,6 +4,7 @@ import time
 import datetime
 import shelve
 import os
+from _ast import operator
 
 
 def mostra_a_cola():
@@ -13,6 +14,59 @@ def mostra_a_cola():
     for c in ordered_list:
         print(c, "=", eval(c))
 
+def criar_tabela():
+    global lista, operador, numero_operado, ordered_list
+
+    lista = []
+    ordered_list = []
+
+    while True:
+        try:
+            numero_operado = int(input("Qual número você gostaria de usar? "))
+
+            operador = ''
+            print(f"""
+Escolha o operador
+    [0]  +  Adição
+    [1]  -  Subtração
+    [2]  *  Multiplicação
+--------------------------
+""")
+            while True:
+                try:
+                    operador = int(input("Escolha: "))
+
+                    match operador:
+                        case 0:
+                            operador = '+'
+                        case 1:
+                            operador = '-'
+                        case 2:
+                            operador = '*'
+                        case _:
+                            print("\nErro!, Escolha um operador adequado!\n")
+                            operador = False
+                            continue
+
+                    break
+                except ValueError:
+                    continue
+
+        except ValueError:
+            continue
+        else:
+            break
+
+    for n1 in range(numero_operado, numero_operado+1):
+        for n2 in range(1, 10 + 1):
+            expression = f"{n1}{operador}{n2}"
+            lista.append(expression)
+
+    ordered_list = lista[:]
+
+def verifica_numero_e_operador():
+    if not numero_operado:
+        criar_tabela()
 
 # Área shelve
 
@@ -22,38 +76,12 @@ def clear():
     else:
         os.system("cls")
 
-
-def guardar_records(tempo_feito):
-    """
-    Guarda no objeto shelve o novo record
-    """
-
-    def salvar(key, info):
-        data_shell = d[key]
-        data_shell.append(info)
-        d[key] = data_shell
-
-    d = shelve.open("registro")
-    if 'tudo' not in d:
-        d['tudo'] = [tempo_feito]
-
-    if chave not in d:
-        d[chave] = [tempo_feito]
-    else:
-        if tempo_feito not in d[chave]:  # evita tempos repetidos
-            salvar(chave, tempo_feito)
-            salvar('tudo', tempo_feito)
-
-    d.close()
-
-
 def clear_all_records():
     d = shelve.open("registro")
 
     """Apagar todos os records"""
     d.clear()
     d.close()
-
 
 def clear_day_records():
     d = shelve.open("registro")
@@ -63,12 +91,12 @@ def clear_day_records():
         pass
     d.close()
 
-
 def verificar_todos_os_tempo():
     d = shelve.open("registro")
 
     try:
         print("\nResultados de tempo!!")
+        d[chave]
         for c in d.keys():
             if c != 'tudo':
                 print(f"Dia {c}")
@@ -81,7 +109,6 @@ def verificar_todos_os_tempo():
     clear()
 
     d.close()
-
 
 def verificar_records():
     clear()
@@ -102,17 +129,38 @@ def verificar_records():
 
     clear()
 
+def guardar_records(tempo_feito):
+    """
+    Guarda no objeto shelve o novo record
+    """
+
+    def salvar(key, info):
+        data_shell = d[key]
+        data_shell.append(info)
+        d[key] = data_shell
+
+    d = shelve.open("registro")
+    if 'tudo' not in d:
+        d['tudo'] = [tempo_feito]
+
+    if chave not in d:
+        d[chave] = [f"Tempo: {tempo_feito} Operador: {operador} Tabela do: {numero_operado} "]
+    else:
+        if tempo_feito not in d[chave]:  # evita tempos repetidos
+            salvar(chave, f"Tempo: {tempo_feito} Operador: {operador} Tabela do: {numero_operado} | ")
+            salvar('tudo', tempo_feito)
+
+    d.close()
 
 def normal_game():
-    print("Iniciando...\n")
+    print("iniciando...")
     mostra_a_cola()
-    time.sleep(2.5)
+    input("\nDigite qualquer tecla para continuar!")
     clear()
 
     acertos = 0
     erros = 0
     random.shuffle(lista)
-
     start = time.time()
     for num in lista:
         # Em caso de digitar alguma coisa que não seja número repete o trecho indefinidamente
@@ -192,27 +240,25 @@ Para 'sair' do modo digite sair ou 'Sair'
         if resposta == 'sair' or resposta == "Sair":
             break
 
-
 chave = str(datetime.datetime.now().strftime("%d-%m"))
 lista = []
+ordered_list = []
+numero_operado = ''
+operador = ''
 
-for n1 in range(7, 7 + 1):
-    for n2 in range(1, 10 + 1):
-        expression = f"{n1}+{n2}"
-        lista.append(expression)
-
-ordered_list = lista[:]
 
 while True:
+    clear()
     resultado = ''
     flag = input(f"""
-Continuar:                  Qualquer Tecla [normal game]
+Continuar                   Qualquer Tecla [normal game]
 Endless Mode                1
 Sair                        2
 Verificar tempos            3
 Resetar Tudo                4
 Resetar Dia                 5
 Verificar records           6
+Configurar operações        7
 -------------------------
 Escolha: """)
 
@@ -220,6 +266,7 @@ Escolha: """)
     match flag:
         case '1':
             endlessMode()
+            verifica_numero_e_operador()
             continue
         case '2':
             break
@@ -235,6 +282,10 @@ Escolha: """)
         case '6':
             verificar_records()
             continue
+        case '7':
+            criar_tabela()
+            continue
         case _:
+            verifica_numero_e_operador()
             normal_game()
             continue
