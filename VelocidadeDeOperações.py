@@ -10,7 +10,7 @@ def mostra_a_cola():
     Procedimento para mostrar uma cola talvez ajude na memorização.
     """
     for c in ordered_list:
-        print(c, "=", eval(c))
+        print('\t', c, "=", eval(c))
 
 def criar_tabela():
     global lista, operador, numero_operado, ordered_list
@@ -96,7 +96,7 @@ def verificar_todos_os_tempo():
         print("\nResultados de tempo!!")
         d[chave]
         for c in d.keys():
-            if c != 'tudo':
+            if c != 'melhores':
                 print(f"Dia {c}")
                 for x in d[c]:
                     print('\t\t', x)
@@ -108,52 +108,79 @@ def verificar_todos_os_tempo():
 
     d.close()
 
-def verificar_records():
-    clear()
+def salvar_progresso(tempo_feito):
     d = shelve.open("registro")
+    match operador:
+        case '+':
+            nome_operador = 'Adição'
+        case '-':
+            nome_operador = 'Subtração'
+        case '*':
+            nome_operador = 'Multiplicação'
 
-    if 'tudo' in d:
-        records = [float(x) for x in d['tudo']]
-
-        print(f"Menor Tempo: {min(records)}")
-        print(f"Maior Tempo: {max(records)}")
-
-        input("Pressione Qualquer Tecla Para Continuar")
-    else:
-        print("Nothing!")
-        input("Pressione Qualquer Tecla Para Continuar")
+    info = d['melhores']
+    if info[nome_operador][numero_operado] is None:
+        info[nome_operador][numero_operado] = tempo_feito
+        d['melhores'] = info
+    elif tempo_feito < d['melhores'][nome_operador][numero_operado]:
+        info[nome_operador][numero_operado] = tempo_feito
+        d['melhores'] = info
 
     d.close()
 
-    clear()
-
-def guardar_records(tempo_feito):
-    """
-    Guarda no objeto shelve o novo record
-    """
-
-    def salvar(key, info):
-        data_shell = d[key]
-        data_shell.append(info)
-        d[key] = data_shell
+def guardar_historico(tempo_feito):
+    tempo_feito = float(tempo_feito)
 
     d = shelve.open("registro")
-    if 'tudo' not in d:
-        d['tudo'] = [tempo_feito]
+
+    if 'melhores' not in d:
+        d['melhores'] = {
+            'Multiplicação': {1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None,10:None},
+            'Subtração': {1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None,10:None},
+            'Adição': {1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None,10:None}
+        }
 
     if chave not in d:
         d[chave] = [f"Tempo: {tempo_feito} Operador: {operador} Tabela do: {numero_operado} "]
     else:
         if tempo_feito not in d[chave]:  # evita tempos repetidos
-            salvar(chave, f"Tempo: {tempo_feito} Operador: {operador} Tabela do: {numero_operado} | ")
-            salvar('tudo', tempo_feito)
+            data_shell = d[chave]
+            data_shell.append(f"Tempo: {tempo_feito}    Operador: {operador}   Tabela do: {numero_operado} ")
+            d[chave] = data_shell
+    d.close()
+
+def progresso_normal_game():
+    d = shelve.open("registro")
+
+    if 'melhores' not in d:
+        d['melhores'] = {
+            'Multiplicação': {1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None,10:None},
+            'Subtração': {1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None,10:None},
+            'Adição': {1:None,2:None,3:None,4:None,5:None,6:None,7:None,8:None,9:None,10:None}
+        }
+
+    print("Progresso No Normal game:\n")
+    print("A medida que se joga os melhores resultados são salvos,\nComplete tudo no melhor Tempo possivel!")
+    print("-----------------------------------------------------------------")
+
+    melhores = d['melhores']
+    for operacoes in melhores:
+        print(operacoes)
+        for num_operado in melhores[operacoes]:
+            if melhores[operacoes][num_operado] is not None:
+                print(f"\ttabela: {num_operado} Melhor Tempo: {melhores[operacoes][num_operado]}")
+
+    print("-----------------------------------------------------------------")
+    input("\nDigite qualquer tecla para continuar!")
 
     d.close()
 
 # game mode
 def normal_game():
-    print("iniciando...")
+    print("Objetivo do normal game!")
+    print("Resolver a tabela de operações em 10 segundos\n")
     mostra_a_cola()
+
     input("\nDigite qualquer tecla para continuar!")
     clear()
 
@@ -196,7 +223,8 @@ def normal_game():
         if erros == 0:
             op = input("Salvar, Qualquer tecla para continuar / 0 [não]: ")
             if op != '0':
-                guardar_records(time_record)
+                guardar_historico(time_record)
+                salvar_progresso(time_record)
             clear()
         else:
             print("Com erros sem tempo salvo!")
@@ -252,11 +280,11 @@ while True:
 Continuar                   Qualquer Tecla [normal game]
 Endless Mode                1
 Sair                        2
-Verificar tempos            3
+Historico de partidas       3 [normal game]
 Resetar Tudo                4
 Resetar Dia                 5
-Verificar records           6
-Configurar operações        7
+Configurar operações        6
+Progresso normal game       7
 -------------------------
 Escolha: """)
 
@@ -278,10 +306,10 @@ Escolha: """)
             clear_day_records()
             continue
         case '6':
-            verificar_records()
+            criar_tabela()
             continue
         case '7':
-            criar_tabela()
+            progresso_normal_game()
             continue
         case _:
             verifica_numero_e_operador()
