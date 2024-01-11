@@ -110,6 +110,7 @@ def verificar_todos_os_tempo():
 
 def salvar_progresso(tempo_feito):
     d = shelve.open("registro")
+
     match operador:
         case '+':
             nome_operador = 'Adição'
@@ -122,14 +123,13 @@ def salvar_progresso(tempo_feito):
     if info[nome_operador][numero_operado] is None:
         info[nome_operador][numero_operado] = tempo_feito
         d['melhores'] = info
-    elif tempo_feito < d['melhores'][nome_operador][numero_operado]:
+    if tempo_feito < d['melhores'][nome_operador][numero_operado]:
         info[nome_operador][numero_operado] = tempo_feito
         d['melhores'] = info
 
     d.close()
 
 def guardar_historico(tempo_feito):
-    tempo_feito = float(tempo_feito)
 
     d = shelve.open("registro")
 
@@ -214,7 +214,7 @@ def normal_game():
     if resultado != '0':
         end = time.time()
 
-        time_record = f"{end - start:.2f}"
+        time_record = float(f"{end - start:.2f}")
 
         clear()
 
