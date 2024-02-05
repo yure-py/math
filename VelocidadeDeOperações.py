@@ -231,12 +231,26 @@ def normal_game():
             input("\nDigite qualquer tecla para continuar!")
 
 def endlessMode():
+    def mostra_desempenho():
+        clear()
+        for key in tempo_de_resposta:
+            try:
+                media = sum(tempo_de_resposta[key]) / len(tempo_de_resposta[key])
+            except ZeroDivisionError:
+                print('Falta dados!')
+            else:
+                print('calculo:', key, f' | tempo médio: {media:.2f}', ' | Qtd para média:', len(tempo_de_resposta[key]) )
+
+        input("\nDigite qualquer tecla para continuar!")
+        clear()
+
     print("""
 Modo para melhorar a precisão dos cálculos antes de entrar no normal game!
-Para 'sair' do modo digite sair ou 'Sair'
+Para sair do modo, digite 'sair', 'Sair' ou 'x'. 
     """)
 
     acertos = 0
+    tempo_de_resposta = {k:[] for k in ordered_list}
     resposta = True
 
     while resposta:
@@ -244,20 +258,39 @@ Para 'sair' do modo digite sair ou 'Sair'
 
         for num in lista:
             print(f"Win Streak: {acertos}")
+            print("digite 'v' para ver")
+            print("digite 'i' para o desempenho")
+
             while resposta:
                 try:
+                    tempo_de_resposta_start = time.time()
                     resposta = input(f"{num} = ")
+                    tempo_de_resposta_end = time.time()
 
                     if int(resposta) == eval(num):
+                        tempo_de_resposta[num].append(tempo_de_resposta_end - tempo_de_resposta_start)
                         acertos += 1
                         break
+
                     else:
                         acertos = -1
 
                 except ValueError:
-                    if resposta == 'sair' or resposta == "Sair":
+                    if resposta == 'sair' or resposta == "Sair" or resposta == "x":
                         resposta = False
                         break
+
+                    elif resposta == 'v':
+                        clear()
+                        mostra_a_cola()
+                        input("\nDigite qualquer tecla para continuar!")
+                        clear()
+                        continue
+
+                    elif resposta == "i":
+                        mostra_desempenho()
+                        continue
+
                     else:
                         resposta = True
                         continue
