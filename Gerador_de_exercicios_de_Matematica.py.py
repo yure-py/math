@@ -1,10 +1,10 @@
 import random
 
-num_range = 20
-qtd_de_termos = 2
+num_range = 10
+qtd_de_termos = 5
 operadores = ["+", "-", "*", "/"]
 op_operadores = 3
-flag_para_negativos = 1
+flag_para_negativos = 0
 
 
 def gerar_numeros():
@@ -34,7 +34,11 @@ def criar_expressao():
         if not termos:
             break
 
-        operador = random.randint(0, op_operadores)
+        if op_operadores > 2:
+            operador = random.randint(1, op_operadores)
+        else:
+            operador = random.randint(0, op_operadores)
+
         expr += f'{operadores[operador]}'
 
     return expr

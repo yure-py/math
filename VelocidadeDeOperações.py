@@ -268,10 +268,11 @@ Para sair do modo, digite 'sair', 'Sair' ou 'x'.
                     tempo_de_resposta_end = time.time()
 
                     if int(resposta) == eval(num):
-                        tempo_de_resposta[num].append(tempo_de_resposta_end - tempo_de_resposta_start)
+                        if acertos > -1:
+                            tempo_de_resposta[num].append(tempo_de_resposta_end - tempo_de_resposta_start)
+
                         acertos += 1
                         break
-
                     else:
                         acertos = -1
 
