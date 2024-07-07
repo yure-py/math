@@ -179,20 +179,24 @@ def progresso_normal_game():
 def normal_game():
     print("Objetivo do normal game!")
     print("Resolver a tabela de operações em 10 segundos\n")
+
     mostra_a_cola()
 
     input("\nDigite qualquer tecla para continuar!")
+
     clear()
 
     acertos = 0
     erros = 0
     random.shuffle(lista)
     start = time.time()
-    for num in lista:
+
+    for expressao in lista:
+
         # Em caso de digitar alguma coisa que não seja número repete o trecho indefinidamente
         while True:
             try:
-                resultado = input(f"{num} = ")
+                resultado = input(f"{expressao} = ")
                 int(resultado)
                 clear()
             except ValueError:
@@ -200,13 +204,13 @@ def normal_game():
             else:
                 break
 
-        # Possibilidade de sair
+        # Condição de saída do normal game
         if resultado == '0':
             clear()
             break
 
         # incrementa erro ou acerto
-        if int(resultado) == eval(num):
+        if int(resultado) == eval(expressao):
             acertos += 1
         else:
             erros += 1
@@ -231,6 +235,7 @@ def normal_game():
             input("\nDigite qualquer tecla para continuar!")
 
 def endlessMode():
+
     def mostra_desempenho():
         clear()
         for key in tempo_de_resposta:
@@ -254,6 +259,7 @@ Para sair do modo, digite 'sair', 'Sair' ou 'x'.
     resposta = True
 
     while resposta:
+
         random.shuffle(lista)
 
         for num in lista:
@@ -262,6 +268,7 @@ Para sair do modo, digite 'sair', 'Sair' ou 'x'.
             print("digite 'i' para o desempenho")
 
             while resposta:
+
                 try:
                     tempo_de_resposta_start = time.time()
                     resposta = input(f"{num} = ")
@@ -323,6 +330,7 @@ Progresso normal game       7
 Escolha: """)
 
     clear()
+
     match flag:
         case '1':
             verifica_numero_e_operador()

@@ -1,16 +1,19 @@
 import random
 
-num_range = 10
-qtd_de_termos = 5
-operadores = ["+", "-", "*", "/"]
-op_operadores = 3
-flag_para_negativos = 0
+num_range_upperbound = 99
+num_range_lowerbound = 2
+qtd_de_termos = 3
+operadores = ["*", "+", "-"]
+flag_para_negativos = 1
+qtd_exercicios = 10
 
+
+op_operadores = len(operadores) - 1
 
 def gerar_numeros():
     termos = []
     for _ in range(qtd_de_termos):
-        num = random.randint(0, num_range)
+        num = random.randint(num_range_lowerbound, num_range_upperbound)
 
         if random.randint(0, 3) == 2 and flag_para_negativos == 1:
             if _ == 0:
@@ -45,7 +48,15 @@ def criar_expressao():
 
 
 def main():
-    for c in range(100):
-        print(criar_expressao())
+    tudo = []
+    for _ in range(qtd_exercicios):
+        expr = criar_expressao()
+        tudo.append(expr)
+        print(expr)
+        
+    print("\n", end="")
+    input()
+    for idx in range(len(tudo)):
+        print(eval(tudo[idx]))
 
 main()
