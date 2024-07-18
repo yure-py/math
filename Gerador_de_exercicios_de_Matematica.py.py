@@ -1,11 +1,11 @@
 import random
 
-num_range_upperbound = 99
+num_range_upperbound = 9999
 num_range_lowerbound = 2
-qtd_de_termos = 3
-operadores = ["*", "+", "-"]
-flag_para_negativos = 1
-qtd_exercicios = 10
+qtd_de_termos = 2
+operadores = ["+"]
+flag_para_negativos = 0
+qtd_exercicios = 5
 
 
 op_operadores = len(operadores) - 1
