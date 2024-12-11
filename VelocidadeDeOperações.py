@@ -67,13 +67,13 @@ def verifica_numero_e_operador():
     if not numero_operado:
         criar_tabela()
 
-# Área shelve
 def clear():
     if platform.system() == "Linux":
         os.system("clear")
     else:
         os.system("cls")
 
+# Área shelve
 def clear_all_records():
     d = shelve.open("registro")
 
@@ -93,13 +93,13 @@ def verificar_todos_os_tempo():
     d = shelve.open("registro")
 
     try:
-        print("\nResultados de tempo!!")
+        print("\nMelhores Resultados de tempo!!")
         d[chave]
         for c in d.keys():
             if c != 'melhores':
                 print(f"Dia {c}")
                 for x in d[c]:
-                    print('\t\t', x)
+                    print('  ', x)
     except KeyError:
         print("Nenhum registro!")
 
